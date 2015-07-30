@@ -4,19 +4,20 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"runtime"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	http.HandleFunc("/", hello)
+	r := gin.Default()
+
+	r.GET("/", func(c *gin.Context) {
+		c.String(200, "Olá, Longa!")
+	})
+
 	bind := fmt.Sprintf("%s:%s", os.Getenv("HOST"), os.Getenv("PORT"))
-	fmt.Printf("listening on %s...", bind)
-	err := http.ListenAndServe(bind, nil)
+
+	err := http.ListenAndServe(bind, r)
 	if err != nil {
 		panic(err)
 	}
-}
-
-func hello(res http.ResponseWriter, req *http.Request) {
-	fmt.Fprintf(res, "hello, world from %s", runtime.Version())
 }
