@@ -30,7 +30,7 @@ func main() {
 		c.JSON(http.StatusOK, &Response{UserMessage: "Login successful!", User: user})
 	})
 
-	err := http.ListenAndServe(fmt.Sprintf("%s:%s", os.Getenv("HOST"), os.Getenv("PORT")), router)
+	err := http.ListenAndServe(":8080", router)
 	if err != nil {
 		panic(err)
 	}
