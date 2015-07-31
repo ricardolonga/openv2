@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"openv2/domain"
+	"github.com/ricardolonga/openv2/domain"
 	"os"
 )
 
