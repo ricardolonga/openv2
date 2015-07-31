@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"net/http"
 	"github.com/ricardolonga/openv2/domain"
+	"net/http"
 )
 
 type Response struct {
@@ -16,10 +16,12 @@ func main() {
 
 	router := gin.Default()
 
+	gin.SetMode(gin.DebugMode)
+
 	router.Use(HeadersRequired())
 
 	router.GET("/", func(c *gin.Context) {
-		c.String(200, fmt.Sprintf("Olá!"))
+		c.String(200, "Olá, estou na AWS!")
 	})
 
 	router.POST("/login", func(c *gin.Context) {
