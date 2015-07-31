@@ -1,11 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"github.com/ricardolonga/openv2/domain"
-	"os"
 )
 
 type Response struct {
