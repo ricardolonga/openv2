@@ -5,7 +5,6 @@ ADD . /gopath/src/github.com/ricardolonga/openv2/
 
 # go get all of the dependencies
 RUN go get github.com/gin-gonic/gin
-RUN go get github.com/ricardolonga/openv2
 
 EXPOSE 8080
 
