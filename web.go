@@ -20,11 +20,39 @@ func main() {
 
 	//	router.Use(HeadersRequired())
 
-	router.GET("/events", func(c *gin.Context) {
-		c.JSON(200, eventRepository.GetAll())
-	})
+	router.GET("/events", GetAllEvents(eventRepository))
+	router.POST("/events", CreateEvent(eventRepository))
+	router.PUT("/events/:id/checkin", Checkin(eventRepository))
+	router.PUT("/events/:id/checkout", Checkout(eventRepository))
 
-	router.POST("/events", func(c *gin.Context) {
+	err := http.ListenAndServe(":8080", router)
+	if err != nil {
+		panic(err)
+	}
+}
+
+//func HeadersRequired() gin.HandlerFunc {
+//	return func(c *gin.Context) {
+//		if _, contain := c.Request.Header["Name"]; !contain {
+//			c.JSON(http.StatusBadRequest, &Response{UserMessage: "Name is not defined into headers."})
+//			c.Abort()
+//		}
+//
+//		if _, contain := c.Request.Header["Email"]; !contain {
+//			c.JSON(http.StatusBadRequest, &Response{UserMessage: "Email is not defined into headers."})
+//			c.Abort()
+//		}
+//	}
+//}
+
+func GetAllEvents(eventRepository *domain.EventsRepository) func(c *gin.Context) {
+	return func(c *gin.Context) {
+		c.JSON(200, eventRepository.GetAll())
+	}
+}
+
+func CreateEvent(eventRepository *domain.EventsRepository) func(c *gin.Context) {
+	return func(c *gin.Context) {
 		event := &domain.Event{}
 
 		if c.BindJSON(&event) == nil {
@@ -35,9 +63,11 @@ func main() {
 
 			c.JSON(http.StatusOK, eventRepository.Save(event))
 		}
-	})
+	}
+}
 
-	router.PUT("/events/:id/checkin", func(c *gin.Context) {
+func Checkin(eventRepository *domain.EventsRepository) func(c *gin.Context) {
+	return func(c *gin.Context) {
 		event := eventRepository.Get(c.Param("id"))
 
 		if event == nil {
@@ -56,9 +86,11 @@ func main() {
 
 			c.JSON(http.StatusOK, eventRepository.Save(event))
 		}
-	})
+	}
+}
 
-	router.PUT("/events/:id/checkout", func(c *gin.Context) {
+func Checkout(eventRepository *domain.EventsRepository) func(c *gin.Context) {
+	return func(c *gin.Context) {
 		event := eventRepository.Get(c.Param("id"))
 
 		if event == nil {
@@ -87,24 +119,5 @@ func main() {
 
 			c.JSON(http.StatusOK, eventRepository.Save(event))
 		}
-	})
-
-	err := http.ListenAndServe(":8080", router)
-	if err != nil {
-		panic(err)
 	}
 }
-
-//func HeadersRequired() gin.HandlerFunc {
-//	return func(c *gin.Context) {
-//		if _, contain := c.Request.Header["Name"]; !contain {
-//			c.JSON(http.StatusBadRequest, &Response{UserMessage: "Name is not defined into headers."})
-//			c.Abort()
-//		}
-//
-//		if _, contain := c.Request.Header["Email"]; !contain {
-//			c.JSON(http.StatusBadRequest, &Response{UserMessage: "Email is not defined into headers."})
-//			c.Abort()
-//		}
-//	}
-//}
