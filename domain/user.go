@@ -1,7 +1,7 @@
 package domain
 
 type User struct {
-	Email  string   `json:"email"`
-	Name   string   `json:"name"`
-	Skills []string `json:"skills"`
+	Email  string   `json:"email,omitempty"`
+	Name   string   `json:"name,omitempty"`
+	Skills []string `json:"skills,omitempty"`
 }

@@ -11,7 +11,7 @@ type EventsRepository struct {
 
 func (this *EventsRepository) Save(event *Event) *Event {
 	if this.events == nil {
-		this.events = make(map[string]*Event)
+		this.events = make(map[string]*Event, 0)
 	}
 
 	if event.Id == "" {
@@ -20,15 +20,15 @@ func (this *EventsRepository) Save(event *Event) *Event {
 
 	this.events[event.Id] = event
 
-	return event
+	return this.events[event.Id]
 }
 
 func (this *EventsRepository) GetAll() *Events {
 	if this.events == nil {
-		this.events = make(map[string]*Event)
+		this.events = make(map[string]*Event, 0)
 	}
 
-	events := make([]Event, len(this.events))
+	events := make([]Event, 0)
 
 	for _, event := range this.events {
 		events = append(events, *event)
@@ -39,7 +39,7 @@ func (this *EventsRepository) GetAll() *Events {
 
 func (this *EventsRepository) Get(id string) *Event {
 	if this.events == nil {
-		this.events = make(map[string]*Event)
+		this.events = make(map[string]*Event, 0)
 		return nil
 	}
 
