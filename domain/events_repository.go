@@ -23,7 +23,7 @@ func (this *EventsRepository) Save(event *Event) *Event {
 	return this.events[event.Id]
 }
 
-func (this *EventsRepository) GetAll() *Events {
+func (this *EventsRepository) GetAll() *[]Event {
 	if this.events == nil {
 		this.events = make(map[string]*Event, 0)
 	}
@@ -34,7 +34,7 @@ func (this *EventsRepository) GetAll() *Events {
 		events = append(events, *event)
 	}
 
-	return &Events{Events: events}
+	return &events
 }
 
 func (this *EventsRepository) Get(id string) *Event {
