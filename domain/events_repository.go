@@ -9,6 +9,10 @@ type EventsRepository struct {
 	events map[string]*Event
 }
 
+func NewEventsRepository() *EventsRepository {
+	return &EventsRepository{}
+}
+
 func (this *EventsRepository) Save(event *Event) *Event {
 	if this.events == nil {
 		this.events = make(map[string]*Event, 0)
