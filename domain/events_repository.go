@@ -41,6 +41,24 @@ func (this *EventsRepository) GetAll() *[]Event {
 	return &events
 }
 
+func (this *EventsRepository) GetByName(name string) *[]Event {
+	events := make([]Event, 0)
+
+	if this.events == nil {
+		this.events = make(map[string]*Event, 0)
+		return &events
+	}
+
+	for _, event := range this.events {
+		if strings.Contains(event.Name, name) {
+			events = append(events, *event)
+		}
+	}
+
+	return &events
+}
+
+
 func (this *EventsRepository) Get(id string) *Event {
 	if this.events == nil {
 		this.events = make(map[string]*Event, 0)

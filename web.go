@@ -5,6 +5,7 @@ import (
 	"github.com/ricardolonga/openv2/domain"
 	"net/http"
 	"strings"
+	"log"
 )
 
 type Response struct {
@@ -20,7 +21,7 @@ func main() {
 
 	//	router.Use(HeadersRequired())
 
-	router.GET("/events", GetAllEvents(eventRepository))
+	router.GET("/events", GetEvents(eventRepository))
 	router.POST("/events", CreateEvent(eventRepository))
 	router.PUT("/events/:id/checkin", Checkin(eventRepository))
 	router.PUT("/events/:id/checkout", Checkout(eventRepository))
@@ -45,9 +46,18 @@ func main() {
 //	}
 //}
 
-func GetAllEvents(eventRepository *domain.EventsRepository) func(c *gin.Context) {
+func GetEvents(eventRepository *domain.EventsRepository) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		c.JSON(200, eventRepository.GetAll())
+		name := c.Query("name")
+
+		log.Printf("Name: %s\n", name)
+
+		if name == "" {
+			c.JSON(200, eventRepository.GetAll())
+			return
+		}
+
+		c.JSON(200, eventRepository.GetByName(name))
 	}
 }
 
