@@ -115,7 +115,7 @@ func Checkout(eventRepository *domain.EventsRepository) func(c *gin.Context) {
 				return
 			}
 
-			members := make([]domain.User, len(event.Members)-1)
+			members := make([]domain.User, 0)
 
 			for _, member := range event.Members {
 				if strings.EqualFold(member.Email, user.Email) {
