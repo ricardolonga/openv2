@@ -58,7 +58,6 @@ func (this *EventsRepository) GetByName(name string) *[]Event {
 	return &events
 }
 
-
 func (this *EventsRepository) Get(id string) *Event {
 	if this.events == nil {
 		this.events = make(map[string]*Event, 0)

@@ -25,6 +25,7 @@ func main() {
 	router.POST("/events", CreateEvent(eventRepository))
 	router.PUT("/events/:id/checkin", Checkin(eventRepository))
 	router.PUT("/events/:id/checkout", Checkout(eventRepository))
+	router.GET("/events/:id/members", GetMembers(eventRepository))
 
 	err := http.ListenAndServe(":8080", router)
 	if err != nil {
@@ -129,5 +130,36 @@ func Checkout(eventRepository *domain.EventsRepository) func(c *gin.Context) {
 
 			c.JSON(http.StatusOK, eventRepository.Save(event))
 		}
+	}
+}
+
+func GetMembers(eventRepository *domain.EventsRepository) func(c *gin.Context) {
+	return func(c *gin.Context) {
+		event := eventRepository.Get(c.Param("id"))
+
+		if event == nil {
+			c.JSON(http.StatusNotFound, gin.H{"devMessage": "Event not found."})
+		}
+
+		skill := c.Query("skill")
+
+		log.Printf("Skill: %s\n", skill)
+
+		if skill == "" {
+			c.JSON(200, event.Members)
+			return
+		}
+
+		members := make([]domain.User, 0)
+
+		for _, user := range event.Members {
+			for _, s := range user.Skills {
+				if strings.EqualFold(skill, s) {
+					members = append(members, user)
+				}
+			}
+		}
+
+		c.JSON(200, members)
 	}
 }
