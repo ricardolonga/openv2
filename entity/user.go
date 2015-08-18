@@ -1,4 +1,4 @@
-package domain
+package entity
 
 type User struct {
 	Email  string   `json:"email,omitempty"`

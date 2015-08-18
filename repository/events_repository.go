@@ -1,21 +1,22 @@
-package domain
+package repository
 
 import (
 	"github.com/satori/go.uuid"
 	"strings"
+	"github.com/ricardolonga/openv2/entity"
 )
 
 type EventsRepository struct {
-	events map[string]*Event
+	events map[string]*entity.Event
 }
 
 func NewEventsRepository() *EventsRepository {
 	return &EventsRepository{}
 }
 
-func (this *EventsRepository) Save(event *Event) *Event {
+func (this *EventsRepository) Save(event *entity.Event) *entity.Event {
 	if this.events == nil {
-		this.events = make(map[string]*Event, 0)
+		this.events = make(map[string]*entity.Event, 0)
 	}
 
 	if event.Id == "" {
@@ -27,12 +28,12 @@ func (this *EventsRepository) Save(event *Event) *Event {
 	return this.events[event.Id]
 }
 
-func (this *EventsRepository) GetAll() *[]Event {
+func (this *EventsRepository) GetAll() *[]entity.Event {
 	if this.events == nil {
-		this.events = make(map[string]*Event, 0)
+		this.events = make(map[string]*entity.Event, 0)
 	}
 
-	events := make([]Event, 0)
+	events := make([]entity.Event, 0)
 
 	for _, event := range this.events {
 		events = append(events, *event)
@@ -41,11 +42,11 @@ func (this *EventsRepository) GetAll() *[]Event {
 	return &events
 }
 
-func (this *EventsRepository) GetByName(name string) *[]Event {
-	events := make([]Event, 0)
+func (this *EventsRepository) GetByName(name string) *[]entity.Event {
+	events := make([]entity.Event, 0)
 
 	if this.events == nil {
-		this.events = make(map[string]*Event, 0)
+		this.events = make(map[string]*entity.Event, 0)
 		return &events
 	}
 
@@ -58,9 +59,9 @@ func (this *EventsRepository) GetByName(name string) *[]Event {
 	return &events
 }
 
-func (this *EventsRepository) Get(id string) *Event {
+func (this *EventsRepository) Get(id string) *entity.Event {
 	if this.events == nil {
-		this.events = make(map[string]*Event, 0)
+		this.events = make(map[string]*entity.Event, 0)
 		return nil
 	}
 

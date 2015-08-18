@@ -1,4 +1,4 @@
-package domain
+package entity
 
 type Event struct {
 	Id        string `json:"id,omitempty"`
