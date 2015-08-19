@@ -95,33 +95,56 @@ func Checkout(eventRepository *repository.EventsRepository) func(c *gin.Context)
 	}
 }
 
-func GetMembers(eventRepository *repository.EventsRepository) func(c *gin.Context) {
+func GetMembers(eventRepository *repository.EventsRepository, usersRepository *repository.UsersRepository) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		event := eventRepository.Get(c.Param("id"))
 
 		if event == nil {
 			c.JSON(http.StatusNotFound, gin.H{"devMessage": "Event not found."})
+			return
 		}
 
 		skill := c.Query("skill")
 
-		log.Printf("Skill: %s\n", skill)
-
 		if skill == "" {
+			if event.Members == nil {
+				c.JSON(http.StatusOK, make([]entity.User, 0))
+				return
+			}
+
 			c.JSON(200, event.Members)
 			return
 		}
 
+		emails := make([]string, 0)
+
+		if event.Members == nil {
+			c.JSON(http.StatusOK, make([]entity.User, 0))
+			return
+		}
+
+		for _, member := range event.Members {
+			emails = append(emails, member.Email)
+		}
+
+		fullMembers := usersRepository.GetAllByEmails(emails)
+
 		members := make([]entity.User, 0)
 
-		for _, user := range event.Members {
-			for _, s := range user.Skills {
-				if strings.EqualFold(skill, s) {
-					members = append(members, user)
+		skills := strings.Split(skill, ",")
+
+	user:
+		for _, fullUser := range fullMembers {
+			for _, userSkill := range fullUser.Skills {
+				for _, querySkill := range skills {
+					if strings.EqualFold(querySkill, userSkill) {
+						members = append(members, fullUser)
+						continue user
+					}
 				}
 			}
 		}
 
-		c.JSON(200, members)
+		c.JSON(http.StatusOK, members)
 	}
 }

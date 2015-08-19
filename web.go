@@ -26,11 +26,11 @@ func main() {
 	router.POST("/events", controller.CreateEvent(eventRepository))
 	router.PUT("/events/:id/checkin", controller.Checkin(eventRepository))
 	router.PUT("/events/:id/checkout", controller.Checkout(eventRepository))
-	router.GET("/events/:id/members", controller.GetMembers(eventRepository))
+	router.GET("/events/:id/members", controller.GetMembers(eventRepository, usersRepository))
 
-//	router.POST("/users", controller.CreateUser(usersRepository))
 	router.PUT("/users", controller.UpdateUser(usersRepository))
 	router.GET("/users", controller.GetUsers(usersRepository))
+	router.GET("/users/:email", controller.GetUser(usersRepository))
 
 	if err := http.ListenAndServe(":8080", router); err != nil {
 		panic(err)
